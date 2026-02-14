@@ -241,8 +241,29 @@
       strokeSvg.appendChild(guide);
     });
 
-    // Animate each stroke
+    // Create brush tip group (circle + glow)
+    const brushGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    brushGroup.setAttribute('class', 'brush-tip-group');
+    brushGroup.style.display = 'none';
+
+    const brushGlow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    brushGlow.setAttribute('r', '6');
+    brushGlow.setAttribute('fill', 'rgba(255, 145, 164, 0.3)');
+    brushGlow.setAttribute('class', 'brush-glow');
+    brushGroup.appendChild(brushGlow);
+
+    const brushTip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    brushTip.setAttribute('r', '3.5');
+    brushTip.setAttribute('fill', '#ff91a4');
+    brushTip.setAttribute('class', 'brush-tip');
+    brushGroup.appendChild(brushTip);
+
+    strokeSvg.appendChild(brushGroup);
+
+    // Animate each stroke with brush tip moving along the path
     for (let i = 0; i < kanji.strokes.length; i++) {
+      if (!state.animating) break;
+
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       path.setAttribute('d', kanji.strokes[i]);
       path.setAttribute('stroke', '#5a4a6a');
@@ -250,41 +271,66 @@
       path.setAttribute('fill', 'none');
       path.setAttribute('stroke-linecap', 'round');
       path.setAttribute('stroke-linejoin', 'round');
-      strokeSvg.appendChild(path);
+      // Insert before brush group so brush stays on top
+      strokeSvg.insertBefore(path, brushGroup);
 
       const length = path.getTotalLength();
       path.style.strokeDasharray = length;
       path.style.strokeDashoffset = length;
 
-      // Animate
+      // Animate brush tip along the path
       await new Promise(resolve => {
-        requestAnimationFrame(() => {
-          path.style.transition = 'stroke-dashoffset 0.45s ease-in-out';
-          path.style.strokeDashoffset = '0';
+        const duration = Math.min(Math.max(length * 4, 250), 600);
+        const startTime = performance.now();
+        brushGroup.style.display = '';
 
-          // Add stroke number after animation
-          setTimeout(() => {
-            const startPoint = path.getPointAtLength(0);
-            const numEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            numEl.setAttribute('x', startPoint.x - 4);
-            numEl.setAttribute('y', startPoint.y - 3);
-            numEl.setAttribute('class', 'stroke-number');
-            numEl.textContent = (i + 1);
-            numEl.style.opacity = '0';
-            strokeSvg.appendChild(numEl);
+        // Position brush at start
+        const startPt = path.getPointAtLength(0);
+        brushTip.setAttribute('cx', startPt.x);
+        brushTip.setAttribute('cy', startPt.y);
+        brushGlow.setAttribute('cx', startPt.x);
+        brushGlow.setAttribute('cy', startPt.y);
 
-            requestAnimationFrame(() => {
-              numEl.style.transition = 'opacity 0.3s';
-              numEl.style.opacity = '1';
-            });
+        function step(now) {
+          if (!state.animating) { resolve(); return; }
 
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease in-out for natural brush movement
+          const eased = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+          // Update stroke reveal
+          path.style.strokeDashoffset = length * (1 - eased);
+
+          // Move brush tip along path
+          const point = path.getPointAtLength(length * eased);
+          brushTip.setAttribute('cx', point.x);
+          brushTip.setAttribute('cy', point.y);
+          brushGlow.setAttribute('cx', point.x);
+          brushGlow.setAttribute('cy', point.y);
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
             resolve();
-          }, 480);
-        });
+          }
+        }
+
+        requestAnimationFrame(step);
       });
 
+      // Hide brush tip between strokes
+      brushGroup.style.display = 'none';
+
       // Pause between strokes
-      await sleep(200);
+      await sleep(180);
+    }
+
+    // Remove brush tip when done
+    if (brushGroup.parentNode) {
+      brushGroup.remove();
     }
 
     playBtn.textContent = 'もういちど みる';

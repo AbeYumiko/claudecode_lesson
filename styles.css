@@ -298,11 +298,19 @@ body {
   stroke-linejoin: round;
 }
 
-.stroke-svg .stroke-number {
-  font-size: 7px;
-  fill: var(--pink-deep);
-  font-weight: bold;
-  font-family: 'Zen Maru Gothic', sans-serif;
+/* Brush tip animation */
+.brush-tip {
+  filter: drop-shadow(0 0 2px rgba(255, 145, 164, 0.6));
+  transition: none;
+}
+
+.brush-glow {
+  animation: brushPulse 0.6s ease-in-out infinite;
+}
+
+@keyframes brushPulse {
+  0%, 100% { opacity: 0.3; r: 6; }
+  50% { opacity: 0.6; r: 8; }
 }
 
 .sticker-display {
