@@ -22,6 +22,7 @@ const KANJI_DATA = [
     strokeCount: 1,
     strokes: ['M 12,50 L 88,50'],
     onYomi: ['イチ', 'イツ'], kunYomi: ['ひと', 'ひと-つ'],
+    displayReading: 'いち',
     examples: [
       { word: '一つ', reading: 'ひとつ', meaning: 'ひとつ' },
       { word: '一人', reading: 'ひとり', meaning: 'ひとり' },
@@ -33,6 +34,7 @@ const KANJI_DATA = [
     strokeCount: 2,
     strokes: ['M 25,35 L 75,35', 'M 15,65 L 85,65'],
     onYomi: ['ニ'], kunYomi: ['ふた', 'ふた-つ'],
+    displayReading: 'に',
     examples: [
       { word: '二つ', reading: 'ふたつ', meaning: 'ふたつ' },
       { word: '二人', reading: 'ふたり', meaning: 'ふたり' },
@@ -44,6 +46,7 @@ const KANJI_DATA = [
     strokeCount: 3,
     strokes: ['M 28,24 L 72,24', 'M 22,50 L 78,50', 'M 15,76 L 85,76'],
     onYomi: ['サン'], kunYomi: ['み', 'み-つ', 'みっ-つ'],
+    displayReading: 'さん',
     examples: [
       { word: '三つ', reading: 'みっつ', meaning: 'みっつ' },
       { word: '三人', reading: 'さんにん', meaning: 'さんにん' },
@@ -61,6 +64,7 @@ const KANJI_DATA = [
       'M 20,85 L 80,85'
     ],
     onYomi: ['シ'], kunYomi: ['よ', 'よ-つ', 'よっ-つ', 'よん'],
+    displayReading: 'よん',
     examples: [
       { word: '四つ', reading: 'よっつ', meaning: 'よっつ' },
       { word: '四人', reading: 'よにん', meaning: 'よにん' },
@@ -77,6 +81,7 @@ const KANJI_DATA = [
       'M 20,82 L 80,82'
     ],
     onYomi: ['ゴ'], kunYomi: ['いつ', 'いつ-つ'],
+    displayReading: 'ご',
     examples: [
       { word: '五つ', reading: 'いつつ', meaning: 'いつつ' },
       { word: '五人', reading: 'ごにん', meaning: 'ごにん' },
@@ -93,6 +98,7 @@ const KANJI_DATA = [
       'M 58,42 Q 70,62 82,78'
     ],
     onYomi: ['ロク'], kunYomi: ['む', 'む-つ', 'むっ-つ'],
+    displayReading: 'ろく',
     examples: [
       { word: '六つ', reading: 'むっつ', meaning: 'むっつ' },
       { word: '六月', reading: 'ろくがつ', meaning: 'ろくがつ' }
@@ -120,6 +126,7 @@ const KANJI_DATA = [
       'M 58,20 Q 65,50 82,80'
     ],
     onYomi: ['ハチ'], kunYomi: ['や', 'や-つ', 'やっ-つ', 'よう'],
+    displayReading: 'はち',
     examples: [
       { word: '八つ', reading: 'やっつ', meaning: 'やっつ' },
       { word: '八月', reading: 'はちがつ', meaning: 'はちがつ' },
@@ -134,6 +141,7 @@ const KANJI_DATA = [
       'M 50,45 L 78,45 Q 82,60 78,82'
     ],
     onYomi: ['キュウ', 'ク'], kunYomi: ['ここの', 'ここの-つ'],
+    displayReading: 'きゅう',
     examples: [
       { word: '九つ', reading: 'ここのつ', meaning: 'ここのつ' },
       { word: '九月', reading: 'くがつ', meaning: 'くがつ' }
@@ -147,6 +155,7 @@ const KANJI_DATA = [
       'M 50,12 L 50,88'
     ],
     onYomi: ['ジュウ', 'ジッ'], kunYomi: ['とお', 'と'],
+    displayReading: 'じゅう',
     examples: [
       { word: '十', reading: 'じゅう', meaning: 'じゅう' },
       { word: '十日', reading: 'とおか', meaning: 'とおか' }
@@ -164,6 +173,7 @@ const KANJI_DATA = [
       'M 25,88 L 75,88'
     ],
     onYomi: ['ヒャク'], kunYomi: ['もも'],
+    displayReading: 'ひゃく',
     examples: [
       { word: '百', reading: 'ひゃく', meaning: 'ひゃく' },
       { word: '三百', reading: 'さんびゃく', meaning: 'さんびゃく' }
@@ -178,6 +188,7 @@ const KANJI_DATA = [
       'M 50,15 L 50,90'
     ],
     onYomi: ['セン'], kunYomi: ['ち'],
+    displayReading: 'せん',
     examples: [
       { word: '千', reading: 'せん', meaning: 'せん' },
       { word: '千円', reading: 'せんえん', meaning: 'せんえん' }

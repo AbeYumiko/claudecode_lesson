@@ -260,15 +260,16 @@ body {
 /* Kanji Display Area */
 .kanji-display-area {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   margin: 0 auto 16px;
-  background: linear-gradient(135deg, #fef8ff, #fff5f8);
+  background: var(--white);
   border-radius: 20px;
-  border: 3px dashed var(--lavender-light);
+  border: 2px solid var(--lavender-light);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(200, 162, 200, 0.1);
 }
 
 .kanji-big {
@@ -278,24 +279,42 @@ body {
   line-height: 1;
   user-select: none;
   position: absolute;
+  transition: opacity 0.3s ease;
 }
 
 .stroke-svg {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
 }
 
-.stroke-svg path {
-  fill: none;
-  stroke: var(--text-dark);
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* Stroke counter (top-left circle showing current stroke number) */
+.stroke-counter {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-light), #ffe8f0);
+  border: 2px solid var(--pink);
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stroke-counter.visible {
+  opacity: 1;
 }
 
 /* Brush tip animation */
@@ -309,8 +328,8 @@ body {
 }
 
 @keyframes brushPulse {
-  0%, 100% { opacity: 0.3; r: 6; }
-  50% { opacity: 0.6; r: 8; }
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }
 
 .sticker-display {
@@ -760,8 +779,8 @@ body {
   }
 
   .kanji-display-area {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
   }
 
   .kanji-big {
@@ -769,8 +788,8 @@ body {
   }
 
   .stroke-svg {
-    width: 150px;
-    height: 150px;
+    width: 170px;
+    height: 170px;
   }
 
   .readings-section {

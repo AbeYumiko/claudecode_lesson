@@ -5,6 +5,22 @@
 (function () {
   'use strict';
 
+  // --- Stroke colors (pastel, matching reference app quality) ---
+  const STROKE_COLORS = [
+    '#6fa8c7',  // blue
+    '#b090c8',  // purple
+    '#d89aaa',  // pink
+    '#7db89a',  // green
+    '#c8a870',  // amber
+    '#7aaac0',  // sky blue
+    '#c08888',  // salmon
+    '#88b8a0',  // teal
+    '#b0a0d0',  // light purple
+    '#d0a888',  // peach
+    '#80a8c8',  // steel blue
+    '#a8c098',  // sage
+  ];
+
   // --- State ---
   let state = {
     currentKanji: null,
@@ -39,6 +55,7 @@
   const stickerModal = $('#sticker-modal');
   const stickerGrid = $('#sticker-grid');
   const modalClose = $('#modal-close');
+  const strokeCounter = $('#stroke-counter');
   const confettiCanvas = $('#confetti-canvas');
   const confettiCtx = confettiCanvas.getContext('2d');
 
@@ -94,12 +111,14 @@
       charEl.textContent = kanji.char;
       card.appendChild(charEl);
 
-      // Reading hint
+      // Reading hint (use displayReading if set, otherwise kunYomi or onYomi)
       const readEl = document.createElement('div');
       readEl.className = 'kanji-reading';
-      readEl.textContent = kanji.kunYomi.length > 0
-        ? kanji.kunYomi[0].replace('-', '')
-        : kanji.onYomi[0];
+      readEl.textContent = kanji.displayReading
+        ? kanji.displayReading
+        : (kanji.kunYomi.length > 0
+          ? kanji.kunYomi[0].replace('-', '')
+          : kanji.onYomi[0]);
       card.appendChild(readEl);
 
       // Sticker
@@ -189,10 +208,13 @@
     prevBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
     nextBtn.style.visibility = index < KANJI_DATA.length - 1 ? 'visible' : 'hidden';
 
-    // Play button reset
+    // Play button & counter reset
     playBtn.textContent = 'かきじゅんを みる';
     playBtn.classList.remove('playing');
     state.animating = false;
+    kanjiBig.style.opacity = '';
+    strokeCounter.classList.remove('visible');
+    strokeCounter.textContent = '';
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -229,12 +251,38 @@
     const kanji = state.currentKanji;
     strokeSvg.innerHTML = '';
 
-    // Draw guide (light background strokes)
+    // Fade the background kanji character
+    kanjiBig.style.transition = 'opacity 0.3s';
+    kanjiBig.style.opacity = '0.08';
+
+    // Show stroke counter
+    strokeCounter.classList.add('visible');
+    strokeCounter.textContent = '0';
+
+    // Draw SVG guidelines (cross dashed lines)
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const guideV = document.createElementNS(svgNS, 'line');
+    guideV.setAttribute('x1', '50'); guideV.setAttribute('y1', '2');
+    guideV.setAttribute('x2', '50'); guideV.setAttribute('y2', '98');
+    guideV.setAttribute('stroke', '#ddd5e5');
+    guideV.setAttribute('stroke-width', '0.6');
+    guideV.setAttribute('stroke-dasharray', '3,3');
+    strokeSvg.appendChild(guideV);
+
+    const guideH = document.createElementNS(svgNS, 'line');
+    guideH.setAttribute('x1', '2'); guideH.setAttribute('y1', '50');
+    guideH.setAttribute('x2', '98'); guideH.setAttribute('y2', '50');
+    guideH.setAttribute('stroke', '#ddd5e5');
+    guideH.setAttribute('stroke-width', '0.6');
+    guideH.setAttribute('stroke-dasharray', '3,3');
+    strokeSvg.appendChild(guideH);
+
+    // Draw light guide strokes (background)
     kanji.strokes.forEach(d => {
-      const guide = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const guide = document.createElementNS(svgNS, 'path');
       guide.setAttribute('d', d);
-      guide.setAttribute('stroke', '#e8ddf0');
-      guide.setAttribute('stroke-width', '6');
+      guide.setAttribute('stroke', '#ede8f2');
+      guide.setAttribute('stroke-width', '8');
       guide.setAttribute('fill', 'none');
       guide.setAttribute('stroke-linecap', 'round');
       guide.setAttribute('stroke-linejoin', 'round');
@@ -242,17 +290,17 @@
     });
 
     // Create brush tip group (circle + glow)
-    const brushGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const brushGroup = document.createElementNS(svgNS, 'g');
     brushGroup.setAttribute('class', 'brush-tip-group');
     brushGroup.style.display = 'none';
 
-    const brushGlow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const brushGlow = document.createElementNS(svgNS, 'circle');
     brushGlow.setAttribute('r', '6');
     brushGlow.setAttribute('fill', 'rgba(255, 145, 164, 0.3)');
     brushGlow.setAttribute('class', 'brush-glow');
     brushGroup.appendChild(brushGlow);
 
-    const brushTip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const brushTip = document.createElementNS(svgNS, 'circle');
     brushTip.setAttribute('r', '3.5');
     brushTip.setAttribute('fill', '#ff91a4');
     brushTip.setAttribute('class', 'brush-tip');
@@ -260,14 +308,19 @@
 
     strokeSvg.appendChild(brushGroup);
 
-    // Animate each stroke with brush tip moving along the path
+    // Animate each stroke with color and brush tip
     for (let i = 0; i < kanji.strokes.length; i++) {
       if (!state.animating) break;
 
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      // Update stroke counter
+      strokeCounter.textContent = (i + 1);
+
+      const color = STROKE_COLORS[i % STROKE_COLORS.length];
+
+      const path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', kanji.strokes[i]);
-      path.setAttribute('stroke', '#5a4a6a');
-      path.setAttribute('stroke-width', '6');
+      path.setAttribute('stroke', color);
+      path.setAttribute('stroke-width', '8');
       path.setAttribute('fill', 'none');
       path.setAttribute('stroke-linecap', 'round');
       path.setAttribute('stroke-linejoin', 'round');
@@ -280,7 +333,7 @@
 
       // Animate brush tip along the path
       await new Promise(resolve => {
-        const duration = Math.min(Math.max(length * 4, 250), 600);
+        const duration = Math.min(Math.max(length * 4.5, 300), 700);
         const startTime = performance.now();
         brushGroup.style.display = '';
 
@@ -325,13 +378,16 @@
       brushGroup.style.display = 'none';
 
       // Pause between strokes
-      await sleep(180);
+      await sleep(200);
     }
 
     // Remove brush tip when done
     if (brushGroup.parentNode) {
       brushGroup.remove();
     }
+
+    // Show total stroke count in counter
+    strokeCounter.textContent = kanji.strokes.length;
 
     playBtn.textContent = 'もういちど みる';
     playBtn.classList.remove('playing');
