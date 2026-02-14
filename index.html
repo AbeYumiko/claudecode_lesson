@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>かんじだいすき - いちねんせいのかんじ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="app-header">
+      <h1 class="app-title">かんじだいすき</h1>
+      <p class="app-subtitle">いちねんせいの かんじ 80</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-text" id="progress-text">おぼえた: 0 / 80</span>
+      </div>
+    </header>
+
+    <!-- Category Tabs -->
+    <nav id="category-tabs">
+      <button class="tab-btn active" data-category="all">ぜんぶ</button>
+      <button class="tab-btn" data-category="numbers">すうじ</button>
+      <button class="tab-btn" data-category="nature">しぜん</button>
+      <button class="tab-btn" data-category="people">ひと</button>
+      <button class="tab-btn" data-category="body">からだ</button>
+      <button class="tab-btn" data-category="other">そのた</button>
+    </nav>
+
+    <!-- Home View: Kanji Grid -->
+    <main id="home-view">
+      <div class="kanji-grid" id="kanji-grid"></div>
+    </main>
+
+    <!-- Detail View -->
+    <div id="detail-view" class="hidden">
+      <button class="back-btn" id="back-btn">もどる</button>
+
+      <div class="detail-card">
+        <!-- Kanji Display & Stroke Animation -->
+        <div class="kanji-display-area">
+          <div class="kanji-big" id="kanji-big"></div>
+          <svg id="stroke-svg" viewBox="0 0 100 100" class="stroke-svg"></svg>
+          <div class="sticker-display" id="detail-sticker"></div>
+        </div>
+
+        <div class="stroke-controls">
+          <button class="play-btn" id="play-btn">かきじゅんを みる</button>
+          <span class="stroke-count" id="stroke-count"></span>
+        </div>
+
+        <!-- Readings -->
+        <div class="readings-section">
+          <div class="reading-box on-yomi">
+            <span class="reading-label">おんよみ</span>
+            <span class="reading-value" id="on-yomi"></span>
+          </div>
+          <div class="reading-box kun-yomi">
+            <span class="reading-label">くんよみ</span>
+            <span class="reading-value" id="kun-yomi"></span>
+          </div>
+        </div>
+
+        <!-- Examples -->
+        <div class="examples-section" id="examples-section">
+          <h3 class="section-title">つかいかた</h3>
+          <div class="examples-list" id="examples-list"></div>
+        </div>
+
+        <!-- Mastered Button -->
+        <button class="mastered-btn" id="mastered-btn">おぼえた!</button>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <div class="nav-arrows">
+        <button class="nav-arrow prev" id="prev-btn">&#9664;</button>
+        <button class="nav-arrow next" id="next-btn">&#9654;</button>
+      </div>
+    </div>
+
+    <!-- Sticker Selection Modal -->
+    <div id="sticker-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 class="modal-title">シールを えらんでね!</h2>
+        <div class="sticker-grid" id="sticker-grid"></div>
+        <button class="modal-close" id="modal-close">とじる</button>
+      </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <script src="kanji-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
