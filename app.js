@@ -282,7 +282,7 @@
       const guide = document.createElementNS(svgNS, 'path');
       guide.setAttribute('d', d);
       guide.setAttribute('stroke', '#ede8f2');
-      guide.setAttribute('stroke-width', '8');
+      guide.setAttribute('stroke-width', '4');
       guide.setAttribute('fill', 'none');
       guide.setAttribute('stroke-linecap', 'round');
       guide.setAttribute('stroke-linejoin', 'round');
@@ -295,13 +295,13 @@
     brushGroup.style.display = 'none';
 
     const brushGlow = document.createElementNS(svgNS, 'circle');
-    brushGlow.setAttribute('r', '6');
+    brushGlow.setAttribute('r', '5');
     brushGlow.setAttribute('fill', 'rgba(255, 145, 164, 0.3)');
     brushGlow.setAttribute('class', 'brush-glow');
     brushGroup.appendChild(brushGlow);
 
     const brushTip = document.createElementNS(svgNS, 'circle');
-    brushTip.setAttribute('r', '3.5');
+    brushTip.setAttribute('r', '3');
     brushTip.setAttribute('fill', '#ff91a4');
     brushTip.setAttribute('class', 'brush-tip');
     brushGroup.appendChild(brushTip);
@@ -320,7 +320,7 @@
       const path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', kanji.strokes[i]);
       path.setAttribute('stroke', color);
-      path.setAttribute('stroke-width', '8');
+      path.setAttribute('stroke-width', '5');
       path.setAttribute('fill', 'none');
       path.setAttribute('stroke-linecap', 'round');
       path.setAttribute('stroke-linejoin', 'round');
